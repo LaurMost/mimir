@@ -32,5 +32,7 @@ def _load_pdf(path: Path) -> str:
 def discover_files(root: Path, pattern: str = "**/*") -> list[Path]:
     """Walk `root` and return all supported files."""
     return sorted(
-        p for p in root.glob(pattern) if p.is_file() and p.suffix.lower() in SUPPORTED_EXTENSIONS
+        p
+        for p in root.glob(pattern)
+        if p.is_file() and p.suffix.lower() in SUPPORTED_EXTENSIONS
     )

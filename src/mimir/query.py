@@ -30,11 +30,17 @@ def search(
 ) -> list[Hit]:
     must: list = []
     if folder:
-        must.append(models.FieldCondition(key="folder", match=models.MatchValue(value=folder)))
+        must.append(
+            models.FieldCondition(key="folder", match=models.MatchValue(value=folder))
+        )
     if ext:
-        must.append(models.FieldCondition(key="ext", match=models.MatchValue(value=ext.lower())))
+        must.append(
+            models.FieldCondition(key="ext", match=models.MatchValue(value=ext.lower()))
+        )
     if title:
-        must.append(models.FieldCondition(key="title", match=models.MatchValue(value=title)))
+        must.append(
+            models.FieldCondition(key="title", match=models.MatchValue(value=title))
+        )
     qfilter = models.Filter(must=must) if must else None
 
     qvec = embed_query(query)

@@ -45,7 +45,9 @@ def status():
     t.add_row("Collection", settings.collection)
     t.add_row("Embed model", settings.embed_model)
     t.add_row("Vector size", str(settings.vector_size))
-    t.add_row("Chunk size / overlap", f"{settings.chunk_size} / {settings.chunk_overlap}")
+    t.add_row(
+        "Chunk size / overlap", f"{settings.chunk_size} / {settings.chunk_overlap}"
+    )
     t.add_row("Notes dir", str(settings.notes_dir))
 
     if info is None:
@@ -60,8 +62,12 @@ def status():
 
 @app.command()
 def ingest(
-    path: Path | None = typer.Argument(None, help="Path to ingest. Defaults to MIMIR_NOTES_DIR."),
-    force: bool = typer.Option(False, "--force", "-f", help="Re-embed even unchanged files."),
+    path: Path | None = typer.Argument(
+        None, help="Path to ingest. Defaults to MIMIR_NOTES_DIR."
+    ),
+    force: bool = typer.Option(
+        False, "--force", "-f", help="Re-embed even unchanged files."
+    ),
 ):
     """Walk PATH, chunk, embed, and upsert into Qdrant."""
     root = path or settings.notes_dir
@@ -83,8 +89,12 @@ def query(
     k: int = typer.Option(5, "--k", "-k", help="Number of results."),
     folder: str | None = typer.Option(None, "--folder", help="Filter by folder."),
     ext: str | None = typer.Option(None, "--ext", help="Filter by extension, e.g. .md"),
-    title: str | None = typer.Option(None, "--title", help="Filter by exact file title."),
-    full: bool = typer.Option(False, "--full", help="Show full chunk text (no truncation)."),
+    title: str | None = typer.Option(
+        None, "--title", help="Filter by exact file title."
+    ),
+    full: bool = typer.Option(
+        False, "--full", help="Show full chunk text (no truncation)."
+    ),
 ):
     """Semantic search across your notes."""
     hits = search(text, k=k, folder=folder, ext=ext, title=title)
@@ -92,7 +102,9 @@ def query(
         console.print("[yellow]No results.[/yellow]")
         return
     for i, h in enumerate(hits, 1):
-        body_text = h.text if full else (h.text[:900] + ("…" if len(h.text) > 900 else ""))
+        body_text = (
+            h.text if full else (h.text[:900] + ("…" if len(h.text) > 900 else ""))
+        )
         body = Text(body_text)
         header = f"[{i}] {h.title}  ·  {h.folder}  ·  score={h.score:.3f}"
         console.print(Panel(body, title=header, subtitle=h.path, border_style="cyan"))
@@ -105,7 +117,9 @@ def chat(
     show_sources: bool = typer.Option(True, "--sources/--no-sources"),
 ):
     """Ask Mimir using retrieval-augmented generation (requires Ollama running)."""
-    console.print(f"[dim]Asking {settings.ollama_model} via {settings.ollama_url}...[/dim]\n")
+    console.print(
+        f"[dim]Asking {settings.ollama_model} via {settings.ollama_url}...[/dim]\n"
+    )
     sources = []
     try:
         for token, hits in stream_answer(text, k=k):
@@ -145,7 +159,9 @@ def reset(
 
 @app.command()
 def watch(
-    path: Path | None = typer.Argument(None, help="Path to watch. Defaults to MIMIR_NOTES_DIR."),
+    path: Path | None = typer.Argument(
+        None, help="Path to watch. Defaults to MIMIR_NOTES_DIR."
+    ),
 ):
     """Re-ingest whenever files change (requires `fswatch`)."""
     root = path or settings.notes_dir

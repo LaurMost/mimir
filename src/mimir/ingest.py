@@ -85,7 +85,12 @@ def ingest_path(root: Path, *, force: bool = False) -> dict:
     files = discover_files(root)
     if not files:
         console.print(f"[yellow]No supported files found in {root}[/yellow]")
-        return {"files_seen": 0, "files_indexed": 0, "files_skipped": 0, "chunks_upserted": 0}
+        return {
+            "files_seen": 0,
+            "files_indexed": 0,
+            "files_skipped": 0,
+            "chunks_upserted": 0,
+        }
 
     stats = {
         "files_seen": len(files),

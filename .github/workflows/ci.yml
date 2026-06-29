@@ -32,8 +32,8 @@ jobs:
       - name: Ruff check
         run: uv run ruff check src tests
 
-      - name: Ruff format check
-        run: uv run ruff format --check src tests
+      - name: Black format check
+        run: uv run black --check src tests
 
   test:
     name: Test (Python ${{ matrix.python-version }})
