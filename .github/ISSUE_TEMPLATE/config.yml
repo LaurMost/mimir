@@ -3,3 +3,6 @@ contact_links:
   - name: Documentation
     url: https://github.com/LaurMost/mimir#readme
     about: Most questions are answered in the README.
+  - name: Report a security vulnerability
+    url: https://github.com/LaurMost/mimir/security/policy
+    about: Please report security issues privately, not as a public issue.
