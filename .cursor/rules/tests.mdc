@@ -1,0 +1,17 @@
+---
+description: Testing conventions for Mimir
+globs: tests/**/*.py
+alwaysApply: false
+---
+
+# Testing conventions
+
+- Add tests next to existing ones in `tests/`. The suite must stay fast and run
+  without external services (`conftest.py` isolates the environment).
+- Integration tests that need Qdrant are named `tests/test_integration_*.py` and
+  only run in CI's `integration` job.
+- Coverage floor is 35% (`fail_under = 35`); ratchet up, never down.
+- Don't import the same module two ways in one file (avoid CodeQL
+  `py/import-and-import-from`): use `import mimir.cli` and reference
+  `mimir.cli.app`, not a mix of `import` and `from ... import`.
+- Run with `uv run pytest`. `make test` adds coverage.

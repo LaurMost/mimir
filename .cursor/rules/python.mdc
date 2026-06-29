@@ -1,0 +1,20 @@
+---
+description: Python conventions for Mimir source
+globs: **/*.py
+alwaysApply: false
+---
+
+# Python conventions
+
+- Format with **black** (line length 88). Don't hand-format; let black own it.
+- Lint with **ruff** (`E F I B UP RUF SIM PL S`). `E501` is intentionally off.
+- Add type hints to public functions; put `from __future__ import annotations`
+  at the top of modules.
+- **Lazy heavy imports**: import expensive/optional deps (e.g. `pypdf`,
+  `shutil.which`) inside the function that uses them, matching the existing
+  pattern in `src/mimir/cli.py` and `src/mimir/loaders.py`. Do not hoist them to
+  module top.
+- Respect the per-file `ruff` ignores in `pyproject.toml` (Typer `B008`,
+  `S603/S607` for the `fswatch` shell-out, `S113` for untimed Ollama streaming,
+  `PLC0415` for lazy imports). Understand why before changing them.
+- Comments explain non-obvious intent only.

@@ -1,0 +1,11 @@
+# Project-scoped Codex configuration for Mimir.
+#
+# Codex's primary project guidance is the root AGENTS.md, and repo skills live in
+# .agents/skills/. This file holds only project-scoped overrides that Codex allows
+# in-repo. Provider, auth, profile, notification, and telemetry keys are ignored
+# here on purpose -- set those in your user-level ~/.codex/config.toml.
+#
+# This project only loads when you mark it as trusted.
+
+# Allow the full AGENTS.md to be read (it is comfortably under this limit).
+project_doc_max_bytes = 32768
