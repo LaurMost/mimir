@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 import typer
 from rich.console import Console
@@ -61,9 +60,7 @@ def status():
 
 @app.command()
 def ingest(
-    path: Optional[Path] = typer.Argument(
-        None, help="Path to ingest. Defaults to MIMIR_NOTES_DIR."
-    ),
+    path: Path | None = typer.Argument(None, help="Path to ingest. Defaults to MIMIR_NOTES_DIR."),
     force: bool = typer.Option(False, "--force", "-f", help="Re-embed even unchanged files."),
 ):
     """Walk PATH, chunk, embed, and upsert into Qdrant."""
@@ -84,9 +81,9 @@ def ingest(
 def query(
     text: str = typer.Argument(..., help="Search query."),
     k: int = typer.Option(5, "--k", "-k", help="Number of results."),
-    folder: Optional[str] = typer.Option(None, "--folder", help="Filter by folder."),
-    ext: Optional[str] = typer.Option(None, "--ext", help="Filter by extension, e.g. .md"),
-    title: Optional[str] = typer.Option(None, "--title", help="Filter by exact file title."),
+    folder: str | None = typer.Option(None, "--folder", help="Filter by folder."),
+    ext: str | None = typer.Option(None, "--ext", help="Filter by extension, e.g. .md"),
+    title: str | None = typer.Option(None, "--title", help="Filter by exact file title."),
     full: bool = typer.Option(False, "--full", help="Show full chunk text (no truncation)."),
 ):
     """Semantic search across your notes."""
@@ -148,12 +145,14 @@ def reset(
 
 @app.command()
 def watch(
-    path: Optional[Path] = typer.Argument(None, help="Path to watch. Defaults to MIMIR_NOTES_DIR."),
+    path: Path | None = typer.Argument(None, help="Path to watch. Defaults to MIMIR_NOTES_DIR."),
 ):
     """Re-ingest whenever files change (requires `fswatch`)."""
     root = path or settings.notes_dir
     if not _which("fswatch"):
-        console.print("[red]fswatch not found.[/red] Install with: [bold]brew install fswatch[/bold]")
+        console.print(
+            "[red]fswatch not found.[/red] Install with: [bold]brew install fswatch[/bold]"
+        )
         raise typer.Exit(1)
 
     console.print(f"[bold]Watching[/bold] {root.resolve()}  (Ctrl-C to stop)")

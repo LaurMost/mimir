@@ -18,9 +18,7 @@ Be concise and direct — these are the user's own thoughts coming back to them.
 
 
 def _build_prompt(question: str, hits: list[Hit]) -> str:
-    context = "\n\n---\n\n".join(
-        f"[{h.title}] ({h.path})\n{h.text}" for h in hits
-    )
+    context = "\n\n---\n\n".join(f"[{h.title}] ({h.path})\n{h.text}" for h in hits)
     return f"Context from your notes:\n\n{context}\n\nQuestion: {question}"
 
 

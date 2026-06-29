@@ -142,7 +142,7 @@ def ingest_path(root: Path, *, force: bool = False) -> dict:
             except ValueError:
                 folder = "."
 
-            for i, (chunk, vec) in enumerate(zip(chunks, vectors)):
+            for i, (chunk, vec) in enumerate(zip(chunks, vectors, strict=True)):
                 buffer.append(
                     models.PointStruct(
                         id=_point_id(path, i),
