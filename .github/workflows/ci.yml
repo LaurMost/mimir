@@ -22,6 +22,8 @@ jobs:
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
+          # uv.lock isn't committed in this repo, so key the cache on pyproject.
+          cache-dependency-glob: "pyproject.toml"
 
       - name: Set up Python
         run: uv python install 3.12
@@ -34,6 +36,9 @@ jobs:
 
       - name: Black format check
         run: uv run black --check src tests
+
+      - name: Mypy type check
+        run: uv run mypy src
 
   test:
     name: Test (Python ${{ matrix.python-version }})
@@ -49,6 +54,8 @@ jobs:
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
+          # uv.lock isn't committed in this repo, so key the cache on pyproject.
+          cache-dependency-glob: "pyproject.toml"
 
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
@@ -57,7 +64,7 @@ jobs:
         run: uv sync --extra dev --python ${{ matrix.python-version }}
 
       - name: Run pytest
-        run: uv run pytest -v --tb=short
+        run: uv run --python ${{ matrix.python-version }} --extra dev pytest -v --tb=short --cov=mimir --cov-report=term-missing
 
   integration:
     name: Integration (Qdrant)
@@ -84,6 +91,8 @@ jobs:
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
+          # uv.lock isn't committed in this repo, so key the cache on pyproject.
+          cache-dependency-glob: "pyproject.toml"
 
       - name: Set up Python
         run: uv python install 3.12

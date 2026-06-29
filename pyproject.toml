@@ -56,7 +56,9 @@ Changelog = "https://github.com/yourname/mimir/blob/main/CHANGELOG.md"
 dev = [
     "black>=24.0.0",
     "ruff>=0.6.0",
+    "mypy>=1.11.0",
     "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
     "pre-commit>=3.8.0",
 ]
 
@@ -77,7 +79,7 @@ target-version = "py311"
 extend-exclude = ["qdrant_storage", "notes"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "RUF", "SIM", "PL"]
+select = ["E", "F", "I", "B", "UP", "RUF", "SIM", "PL", "S"]
 ignore = [
     "E501",     # line length — Black owns formatting; it leaves long strings/comments intact
     "PLR0913",  # too many arguments — CLI commands legitimately take many
@@ -86,12 +88,18 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+# Streaming a chat completion from Ollama is intentionally untimed — the
+# response trickles in over a long-lived connection (S113).
+"src/mimir/chat.py" = ["S113"]
 # Typer uses `typer.Argument(...)` / `typer.Option(...)` calls in defaults —
 # that's the canonical pattern, not a real bug. Lazy imports in cli.py are
-# intentional (e.g. shutil.which only used by `watch`).
-"src/mimir/cli.py" = ["B008", "PLC0415"]
-# pypdf is heavy and only needed when actually loading a PDF; the lazy import is deliberate.
-"src/mimir/loaders.py" = ["PLC0415"]
+# intentional (e.g. shutil.which only used by `watch`). The `watch` command
+# deliberately shells out to the `fswatch` binary on PATH (S603/S607) and uses
+# an internal `assert` to narrow the Popen stdout type (S101).
+"src/mimir/cli.py" = ["B008", "PLC0415", "S101", "S603", "S607"]
+# pypdf is heavy and only needed when actually loading a PDF; the lazy import is
+# deliberate. Per-page extraction is best-effort — a corrupt page is skipped (S112).
+"src/mimir/loaders.py" = ["PLC0415", "S112"]
 # test_smoke.py is literally testing that every module imports.
 "tests/test_smoke.py" = ["PLC0415"]
 # Tests legitimately import pytest helpers inside test functions for clarity.
@@ -106,3 +114,26 @@ filterwarnings = [
     "ignore::DeprecationWarning:fastembed.*",
     "ignore::DeprecationWarning:qdrant_client.*",
 ]
+
+[tool.coverage.run]
+source = ["mimir"]
+branch = true
+# __main__.py is the `python -m mimir` entrypoint — not meaningfully testable.
+omit = ["src/mimir/__main__.py"]
+
+[tool.coverage.report]
+show_missing = true
+# Branch-coverage baseline is ~37%. Ratchet this up as tests are added.
+fail_under = 35
+
+[tool.mypy]
+# Targets 3.12 (not our 3.11 floor) because numpy 2.x stubs use 3.12-only `type`
+# syntax that older targets can't parse. Runtime 3.11 compatibility is enforced
+# separately by ruff (target-version = py311) and the 3.11 CI test matrix.
+python_version = "3.12"
+files = ["src"]
+# Third-party libs (qdrant_client, fastembed, pypdf, ...) ship without stubs.
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
