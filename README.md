@@ -1,40 +1,35 @@
-# Mimir
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo/wordmark-on-dark.svg">
+    <img src="assets/logo/wordmark.svg" alt="Mimir" width="460">
+  </picture>
+</p>
 
-[![CI](https://github.com/yourname/mimir/actions/workflows/ci.yml/badge.svg)](https://github.com/yourname/mimir/actions/workflows/ci.yml)
-[![Release](https://github.com/yourname/mimir/actions/workflows/release.yml/badge.svg)](https://github.com/yourname/mimir/actions/workflows/release.yml)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+<p align="center"><em>"The well remembers."</em></p>
+
+<p align="center">
+  <a href="https://github.com/LaurMost/mimir/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/LaurMost/mimir/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
+  <a href="https://github.com/LaurMost/mimir/releases"><img src="https://img.shields.io/github/v/release/LaurMost/mimir?include_prereleases&style=for-the-badge" alt="Latest release"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11+-blue?style=for-the-badge" alt="Python 3.11+"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge" alt="MIT License"></a>
+  <a href="https://github.com/astral-sh/ruff"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json&style=for-the-badge" alt="Ruff"></a>
+</p>
+
+**Mimir is a local-first second brain.** Your notes are embedded into a Qdrant vector store running on your own Mac, and you ask Mimir questions about them — either as fast semantic search or as full RAG answers from a local LLM. Everything runs offline; no tokens ever leave your machine.
 
 > *"And there sat Odin, before the well, and asked counsel of the head of Mimir."*
 
-**A local-first second brain.** Your notes get embedded into a Qdrant vector store running on your Mac, and you ask Mimir questions about them — either as semantic search or full RAG with a local LLM.
+[Quick start](#quick-start) · [Commands](#commands) · [Configuration](#configuration) · [Architecture](docs/architecture.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Security](.github/SECURITY.md)
 
-Everything runs offline. No tokens leave your machine.
+## Highlights
 
-## Architecture
-
-```
-┌─────────────────┐       ┌──────────────┐       ┌──────────────┐
-│  notes/         │──────▶│  ingest      │──────▶│  Qdrant      │
-│  (.md .pdf ...) │       │  chunk+embed │       │  (Docker)    │
-└─────────────────┘       └──────────────┘       └──────┬───────┘
-                                                        │
-                          ┌──────────────┐              │
-                          │  query       │◀─────────────┘
-                          │  (semantic)  │
-                          └──────────────┘
-                                                        │
-                          ┌──────────────┐       ┌──────▼───────┐
-                          │  chat        │◀──────│  Ollama      │
-                          │  (RAG)       │       │  (local LLM) │
-                          └──────────────┘       └──────────────┘
-```
-
-- **Qdrant** — vector store, single Docker container
-- **fastembed** — embeddings via `BAAI/bge-small-en-v1.5` (384d, ONNX, runs natively on Apple Silicon)
-- **Ollama** — local LLM for the chat command (optional)
-- **Typer** — single `mimir` CLI for everything
+- **Local-first, private by default** — runs entirely on your machine; no tokens leave your Mac.
+- **Semantic search** across `.md`, `.pdf`, and more — top-k results with rich previews.
+- **Full RAG chat** with citations back to your notes, powered by any local Ollama model.
+- **Native Apple Silicon embeddings** via fastembed (`BAAI/bge-small-en-v1.5`, ONNX, no GPU required).
+- **Incremental ingestion** — re-ingesting skips unchanged files automatically.
+- **Live re-indexing** — `mimir watch` re-ingests on save.
+- **Swappable models** — change the embedding model or LLM with a single `.env` value.
 
 ## Quick start
 
@@ -44,7 +39,7 @@ brew install --cask orbstack   # or Docker Desktop; OrbStack is lighter on M-ser
 brew install uv ollama         # ollama only if you want the chat command
 
 # 2. Clone + install
-git clone <this-repo> mimir && cd mimir
+git clone https://github.com/LaurMost/mimir.git && cd mimir
 uv sync
 
 # 3. Start Qdrant
@@ -132,18 +127,21 @@ uv run pytest                # run tests
 make lint && make fmt        # ruff
 ```
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the workflow and [RELEASING.md](./RELEASING.md) for cutting versions.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and [RELEASING.md](RELEASING.md) for cutting versions.
 
-## Suggested GitHub repo settings
+## Docs by goal
 
-When you create the GitHub repo, paste this as the description:
-
-> Local-first second brain — Qdrant + fastembed + Ollama on your Mac.
-
-And add these topics so it's discoverable:
-
-`vector-database` · `qdrant` · `rag` · `second-brain` · `local-first` · `embeddings` · `python` · `cli` · `personal-knowledge-management` · `obsidian` · `fastembed` · `ollama` · `apple-silicon`
+| I want to… | Go to |
+|---|---|
+| Get up and running | [Quick start](#quick-start) |
+| See every command | [Commands](#commands) |
+| Tune models and chunking | [Configuration](#configuration) |
+| Understand how it fits together | [Architecture](docs/architecture.md) |
+| Contribute or set up the dev loop | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| Cut a release | [RELEASING.md](RELEASING.md) |
+| See what changed | [CHANGELOG.md](CHANGELOG.md) |
+| Report a vulnerability | [SECURITY.md](.github/SECURITY.md) |
 
 ## License
 
-MIT
+[MIT](LICENSE)
