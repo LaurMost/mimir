@@ -8,6 +8,7 @@
 <p align="center"><em>"The well remembers."</em></p>
 
 <p align="center">
+  <a href="https://laurmost.github.io/mimir/"><img src="https://img.shields.io/badge/docs-mimir-F2EBDD?style=for-the-badge&labelColor=0B0B0D" alt="Documentation"></a>
   <a href="https://github.com/LaurMost/mimir/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/LaurMost/mimir/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
   <a href="https://github.com/LaurMost/mimir/releases"><img src="https://img.shields.io/github/v/release/LaurMost/mimir?include_prereleases&style=for-the-badge" alt="Latest release"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11+-blue?style=for-the-badge" alt="Python 3.11+"></a>
@@ -129,14 +130,19 @@ make lint && make fmt        # ruff
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and [RELEASING.md](RELEASING.md) for cutting versions.
 
-## Docs by goal
+## Documentation
+
+Full documentation lives at **[laurmost.github.io/mimir](https://laurmost.github.io/mimir/)** — getting-started guides, tutorials, a complete CLI reference, configuration, architecture, and an FAQ.
 
 | I want to… | Go to |
 |---|---|
-| Get up and running | [Quick start](#quick-start) |
-| See every command | [Commands](#commands) |
-| Tune models and chunking | [Configuration](#configuration) |
-| Understand how it fits together | [Architecture](docs/reference/architecture.md) |
+| Read the full docs | [laurmost.github.io/mimir](https://laurmost.github.io/mimir/) |
+| Get up and running | [Quickstart](https://laurmost.github.io/mimir/getting-started/quickstart/) |
+| See every command | [CLI reference](https://laurmost.github.io/mimir/reference/cli/) |
+| Tune models and chunking | [Configuration](https://laurmost.github.io/mimir/getting-started/configuration/) |
+| Ingest an Obsidian vault | [Guide](https://laurmost.github.io/mimir/guides/ingest-obsidian/) |
+| Understand how it fits together | [Architecture](https://laurmost.github.io/mimir/reference/architecture/) |
+| Troubleshoot a problem | [FAQ](https://laurmost.github.io/mimir/faq/) |
 | Contribute or set up the dev loop | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Cut a release | [RELEASING.md](RELEASING.md) |
 | See what changed | [CHANGELOG.md](CHANGELOG.md) |
