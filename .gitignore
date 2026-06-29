@@ -38,3 +38,6 @@ site/
 .vscode/
 .idea/
 *.swp
+
+# Agent tooling (local, uncommitted overrides)
+.claude/settings.local.json

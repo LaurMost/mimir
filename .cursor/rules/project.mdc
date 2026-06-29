@@ -1,0 +1,19 @@
+---
+description: Core project conventions for Mimir (always applies)
+alwaysApply: true
+---
+
+# Mimir project rules
+
+Read [AGENTS.md](mdc:AGENTS.md) for the full project guide. The essentials:
+
+- Run all tooling through `uv` (e.g. `uv run pytest`). Prefer `make` targets:
+  `make fmt`, `make lint`, `make typecheck`, `make test`.
+- Before finishing code changes, ensure `ruff check`, `black --check`,
+  `mypy src`, and `pytest` all pass.
+- Conventional commits (`feat`/`fix`/`chore`/`docs`/`refactor`/`test`/`ci`/`deps`)
+  and branch names `<type>/<short-slug>`.
+- `main` is protected (required checks + 1 review). Use the branch -> PR ->
+  squash-merge flow; never force-push `main` or weaken protection.
+- Never commit `.env`, `qdrant_storage/`, `notes/` contents, `site/`, or `.cache/`.
+- Only commit when explicitly asked.
