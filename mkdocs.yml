@@ -75,6 +75,11 @@ theme:
     - content.action.edit
     - content.action.view
 
+# Inject the shared brand assets (logo, favicon, wordmark) from the repo-root
+# assets/ folder so they aren't duplicated under docs/.
+hooks:
+  - docs/hooks/brand_assets.py
+
 plugins:
   - search
   - tags

@@ -63,6 +63,7 @@ logo/
   wordmark.svg                   ← MIMIR, transparent
   wordmark-on-dark.svg           ← MIMIR on bg-dark
   wordmark-dark.svg              ← MIMIR in ink-dark
+  wordmark-bone.svg              ← MIMIR in ink (bone), transparent — used by the docs site
   wordmark-stacked.svg           ← rune + MIMIR (vertical)
   wordmark-stacked-on-dark.svg
 
