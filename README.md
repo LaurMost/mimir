@@ -1,8 +1,14 @@
 # Mimir
 
+[![CI](https://github.com/yourname/mimir/actions/workflows/ci.yml/badge.svg)](https://github.com/yourname/mimir/actions/workflows/ci.yml)
+[![Release](https://github.com/yourname/mimir/actions/workflows/release.yml/badge.svg)](https://github.com/yourname/mimir/actions/workflows/release.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 > *"And there sat Odin, before the well, and asked counsel of the head of Mimir."*
 
-A local-first second brain. Your notes get embedded into a Qdrant vector store running on your Mac, and you ask Mimir questions about them — either as semantic search or full RAG with a local LLM.
+**A local-first second brain.** Your notes get embedded into a Qdrant vector store running on your Mac, and you ask Mimir questions about them — either as semantic search or full RAG with a local LLM.
 
 Everything runs offline. No tokens leave your machine.
 
@@ -116,6 +122,27 @@ docker compose start
 ```
 
 Or just re-ingest from your notes — embeddings are cheap to regenerate.
+
+## Development
+
+```bash
+uv sync --extra dev          # install with dev deps
+uv run pre-commit install    # set up git hooks
+uv run pytest                # run tests
+make lint && make fmt        # ruff
+```
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the workflow and [RELEASING.md](./RELEASING.md) for cutting versions.
+
+## Suggested GitHub repo settings
+
+When you create the GitHub repo, paste this as the description:
+
+> Local-first second brain — Qdrant + fastembed + Ollama on your Mac.
+
+And add these topics so it's discoverable:
+
+`vector-database` · `qdrant` · `rag` · `second-brain` · `local-first` · `embeddings` · `python` · `cli` · `personal-knowledge-management` · `obsidian` · `fastembed` · `ollama` · `apple-silicon`
 
 ## License
 
