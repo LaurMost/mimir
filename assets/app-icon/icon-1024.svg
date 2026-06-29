@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#1F1B17"/>
+      <stop offset="100%" stop-color="#0B0908"/>
+    </radialGradient>
+    <clipPath id="squircle">
+      <rect width="1024" height="1024" rx="229.0688" ry="229.0688"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#squircle)">
+    <rect width="1024" height="1024" fill="url(#g)"/>
+    <g transform="translate(275.3054196592399 721.5103999999999) scale(0.5491753604193971 -0.5491753604193971)"
+       fill="#F2EBDD">
+      <path d="M85 763H184L431 441L678 763H777V0H678V601L494 360L574 255H449L431 279L413 255H289L369 360L184 601V0H85Z"/>
+    </g>
+  </g>
+</svg>
