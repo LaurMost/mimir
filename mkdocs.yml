@@ -1,0 +1,187 @@
+site_name: Mimir
+site_description: Local-first second brain — Qdrant + fastembed + Ollama on your Mac. The well remembers.
+site_author: Laurence Mostert
+site_url: https://laurmost.github.io/mimir/
+
+repo_name: LaurMost/mimir
+repo_url: https://github.com/LaurMost/mimir
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; Laurence Mostert — MIT Licensed
+
+docs_dir: docs
+
+# Internal brand guidelines live in docs/ for convenience but aren't part of the
+# public site.
+exclude_docs: |
+  brand.md
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  language: en
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Light mode — bone surface
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode — stone surface
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  features:
+    # Navigation
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - navigation.tracking
+    - toc.follow
+    # Search
+    - search.suggest
+    - search.highlight
+    - search.share
+    # Code
+    - content.code.copy
+    - content.code.annotate
+    - content.code.select
+    # Content
+    - content.tabs.link
+    - content.tooltips
+    - content.action.edit
+    - content.action.view
+
+plugins:
+  - search
+  - tags
+  # Auto "Last updated" stamp from git history.
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+  # Social cards are generated only in CI, where the Cairo image stack is
+  # installed. Local `mkdocs serve` skips them so it works without Cairo.
+  - social:
+      enabled: !ENV [CI, false]
+      cards_layout_options:
+        background_color: "#0B0B0D"
+        color: "#F2EBDD"
+  - blog:
+      blog_dir: blog
+      post_url_format: "{slug}"
+      authors: false
+      archive: false
+      categories_allowed:
+        - Releases
+        - Guides
+        - Announcements
+  - minify:
+      minify_html: true
+      minify_js: true
+      minify_css: true
+      htmlmin_opts:
+        remove_comments: true
+
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      title: On this page
+  # PyMdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  # Typer CLI auto-documentation
+  - mkdocs-typer
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/LaurMost/mimir
+      name: Mimir on GitHub
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/mimir/
+      name: Mimir on PyPI
+  generator: false
+
+extra_css:
+  - assets/brand.css
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - getting-started/index.md
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+      - Configuration: getting-started/configuration.md
+  - Guides:
+      - guides/index.md
+      - Ingest your Obsidian vault: guides/ingest-obsidian.md
+      - Local RAG chat: guides/rag-chat.md
+      - Live watch & auto-ingest: guides/watching-files.md
+  - Reference:
+      - reference/index.md
+      - CLI reference: reference/cli.md
+      - Architecture: reference/architecture.md
+  - Blog:
+      - blog/index.md
+  - Contributing: contributing.md
+  - FAQ: faq.md

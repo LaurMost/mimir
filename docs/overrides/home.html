@@ -1,0 +1,32 @@
+{#- Custom landing page for Mimir. Extends the Material base layout and injects
+    a brand hero above the normal Markdown content. -#}
+{% extends "main.html" %}
+
+{% block tabs %}
+  {{ super() }}
+  <section class="mimir-hero">
+    <img
+      class="mimir-hero__wordmark"
+      src="{{ 'assets/wordmark.svg' | url }}"
+      alt="Mimir"
+      draggable="false"
+    />
+    <p class="mimir-hero__tagline">&ldquo;The well remembers.&rdquo;</p>
+    <p class="mimir-hero__lede">
+      A local-first second brain. Your notes are embedded into a Qdrant vector
+      store running on your own machine, then queried as fast semantic search or
+      full RAG chat. Everything runs offline &mdash; no tokens ever leave your Mac.
+    </p>
+    <div class="mimir-hero__cta">
+      <a href="{{ 'getting-started/quickstart/' | url }}" class="md-button md-button--primary">
+        Get started
+      </a>
+      <a href="{{ 'reference/cli/' | url }}" class="md-button">
+        CLI reference
+      </a>
+      <a href="{{ config.repo_url }}" class="md-button">
+        View on GitHub
+      </a>
+    </div>
+  </section>
+{% endblock %}
