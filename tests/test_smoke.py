@@ -17,9 +17,11 @@ def test_imports():
 
 
 def test_cli_has_all_commands():
-    from mimir.cli import app
+    import mimir.cli
 
     # Typer's app stores registered commands here
-    names = {cmd.name or cmd.callback.__name__ for cmd in app.registered_commands}
+    names = {
+        cmd.name or cmd.callback.__name__ for cmd in mimir.cli.app.registered_commands
+    }
     expected = {"version", "status", "ingest", "query", "chat", "reset", "watch"}
     assert expected.issubset(names), f"missing commands: {expected - names}"
