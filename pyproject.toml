@@ -47,10 +47,10 @@ dependencies = [
 mimir = "mimir.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/yourname/mimir"
-Repository = "https://github.com/yourname/mimir"
-Issues = "https://github.com/yourname/mimir/issues"
-Changelog = "https://github.com/yourname/mimir/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/LaurMost/mimir"
+Repository = "https://github.com/LaurMost/mimir"
+Issues = "https://github.com/LaurMost/mimir/issues"
+Changelog = "https://github.com/LaurMost/mimir/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [

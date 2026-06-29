@@ -1,0 +1,42 @@
+# Auto-label PRs by the files they touch.
+# Docs: https://github.com/actions/labeler
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "docs/**"
+      - "*.md"
+      - "**/*.md"
+
+test:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "tests/**"
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file:
+      - ".github/**"
+      - "Makefile"
+      - ".pre-commit-config.yaml"
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "pyproject.toml"
+      - "uv.lock"
+      - "requirements*.txt"
+
+python:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "src/**/*.py"
+
+chore:
+  - changed-files:
+    - any-glob-to-any-file:
+      - ".gitignore"
+      - ".editorconfig"
+      - "*.toml"
+      - "*.cfg"
+      - "*.ini"
