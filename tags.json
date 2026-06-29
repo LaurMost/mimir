@@ -1,0 +1,1 @@
+{"mappings": [{"item": {"url": "guides/ingest-obsidian/", "title": "Ingest your Obsidian vault"}, "tags": ["guide", "obsidian"]}, {"item": {"url": "guides/rag-chat/", "title": "Local RAG chat"}, "tags": ["guide", "ollama", "rag"]}, {"item": {"url": "guides/watching-files/", "title": "Live watch & auto-ingest"}, "tags": ["guide", "watch"]}]}
