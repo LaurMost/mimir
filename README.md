@@ -19,7 +19,7 @@
 
 > *"And there sat Odin, before the well, and asked counsel of the head of Mimir."*
 
-[Quick start](#quick-start) · [Commands](#commands) · [Configuration](#configuration) · [Architecture](docs/architecture.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Security](.github/SECURITY.md)
+[Documentation](https://laurmost.github.io/mimir/) · [Quick start](#quick-start) · [Commands](#commands) · [Configuration](#configuration) · [Architecture](docs/reference/architecture.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Security](.github/SECURITY.md)
 
 ## Highlights
 
@@ -136,7 +136,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and [RELEASING.md](RELEA
 | Get up and running | [Quick start](#quick-start) |
 | See every command | [Commands](#commands) |
 | Tune models and chunking | [Configuration](#configuration) |
-| Understand how it fits together | [Architecture](docs/architecture.md) |
+| Understand how it fits together | [Architecture](docs/reference/architecture.md) |
 | Contribute or set up the dev loop | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Cut a release | [RELEASING.md](RELEASING.md) |
 | See what changed | [CHANGELOG.md](CHANGELOG.md) |
