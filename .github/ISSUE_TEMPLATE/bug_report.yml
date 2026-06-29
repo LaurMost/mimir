@@ -1,0 +1,34 @@
+name: Bug report
+description: Something doesn't work the way you expected
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Clear description of the bug, plus what you expected to happen.
+      placeholder: |
+        Steps to reproduce:
+        1. ...
+        2. ...
+
+        Expected: ...
+        Actual: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Output of `uv run mimir version` and `uname -srm`. macOS version, Python version, Docker / OrbStack version.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant output, error tracebacks, or `docker compose logs qdrant`.
+      render: shell
