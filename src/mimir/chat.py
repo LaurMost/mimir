@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Iterator
+from typing import Protocol
 
 import httpx
 
@@ -17,41 +18,60 @@ If the context does not contain the answer, say so plainly. Do not invent.
 Be concise and direct — these are the user's own thoughts coming back to them."""
 
 
-def _build_prompt(question: str, hits: list[Hit]) -> str:
+def build_prompt(question: str, hits: list[Hit]) -> str:
     context = "\n\n---\n\n".join(f"[{h.title}] ({h.path})\n{h.text}" for h in hits)
     return f"Context from your notes:\n\n{context}\n\nQuestion: {question}"
 
 
-def stream_answer(question: str, k: int = 6) -> Iterator[tuple[str, list[Hit]]]:
+class LLMAdapter(Protocol):
+    """The seam every chat backend satisfies: messages in, token stream out."""
+
+    def stream(self, messages: list[dict]) -> Iterator[str]: ...
+
+
+class OllamaAdapter:
+    """Streams chat completions from a local Ollama server."""
+
+    def stream(self, messages: list[dict]) -> Iterator[str]:
+        payload = {
+            "model": settings.ollama_model,
+            "messages": messages,
+            "stream": True,
+        }
+        with httpx.stream(
+            "POST",
+            f"{settings.ollama_url}/api/chat",
+            json=payload,
+            timeout=None,
+        ) as r:
+            r.raise_for_status()
+            for line in r.iter_lines():
+                if not line:
+                    continue
+                obj = json.loads(line)
+                chunk = obj.get("message", {}).get("content", "")
+                if chunk:
+                    yield chunk
+                if obj.get("done"):
+                    break
+
+
+def stream_answer(
+    question: str,
+    k: int = 6,
+    llm: LLMAdapter | None = None,
+) -> Iterator[tuple[str, list[Hit]]]:
     """
     Yields (token, hits) tuples. `hits` is the same list every yield —
     handy for the UI to show sources alongside the streaming answer.
+
+    Pass `llm` to inject a backend (defaults to Ollama).
     """
+    llm = llm or OllamaAdapter()
     hits = search(question, k=k)
-    prompt = _build_prompt(question, hits)
-
-    payload = {
-        "model": settings.ollama_model,
-        "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": prompt},
-        ],
-        "stream": True,
-    }
-
-    with httpx.stream(
-        "POST",
-        f"{settings.ollama_url}/api/chat",
-        json=payload,
-        timeout=None,
-    ) as r:
-        r.raise_for_status()
-        for line in r.iter_lines():
-            if not line:
-                continue
-            obj = json.loads(line)
-            chunk = obj.get("message", {}).get("content", "")
-            if chunk:
-                yield chunk, hits
-            if obj.get("done"):
-                break
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": build_prompt(question, hits)},
+    ]
+    for token in llm.stream(messages):
+        yield token, hits

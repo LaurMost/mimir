@@ -8,13 +8,21 @@ from pathlib import Path
 import typer
 from rich.console import Console
 from rich.panel import Panel
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
 from rich.table import Table
 from rich.text import Text
 
 from mimir import __version__
 from mimir.chat import stream_answer
 from mimir.config import settings
-from mimir.db import collection_info, drop_collection, get_client
+from mimir.db import collection_info, count_chunks, drop_collection
 from mimir.ingest import ingest_path
 from mimir.query import search
 
@@ -53,7 +61,7 @@ def status():
     if info is None:
         t.add_row("Status", "[yellow]collection does not exist yet[/yellow]")
     else:
-        count = get_client().count(settings.collection).count
+        count = count_chunks()
         t.add_row("Points indexed", f"[green]{count:,}[/green]")
         t.add_row("Vectors config", str(info.config.params.vectors))
 
@@ -72,7 +80,31 @@ def ingest(
     """Walk PATH, chunk, embed, and upsert into Qdrant."""
     root = path or settings.notes_dir
     console.print(f"[bold]Ingesting[/bold] {root.resolve()}")
-    stats = ingest_path(root, force=force)
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+        TimeElapsedColumn(),
+        console=console,
+    ) as progress:
+        task = progress.add_task("Ingesting", total=None)
+
+        def on_progress(name: str, current: int, total: int) -> None:
+            progress.update(
+                task, total=total, completed=current, description=f"[cyan]{name}"
+            )
+
+        stats = ingest_path(root, force=force, on_progress=on_progress)
+
+    if stats["files_seen"] == 0:
+        console.print(f"[yellow]No supported files found in {root}[/yellow]")
+        return
+
+    for err_path, msg in stats["errors"]:
+        console.print(f"[red]  skip {err_path}: {msg}[/red]")
+
     t = Table(show_header=False, box=None)
     t.add_column(style="cyan")
     t.add_column(justify="right")
