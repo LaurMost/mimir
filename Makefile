@@ -1,4 +1,4 @@
-.PHONY: up down logs install dev ingest query chat status reset fmt lint test test-fast precommit release-check help
+.PHONY: up down logs install dev ingest query chat status reset fmt lint typecheck test test-fast coverage precommit release-check help
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -29,18 +29,25 @@ ingest: ## Ingest the notes/ directory
 reset: ## Drop the collection
 	uv run mimir reset
 
-fmt: ## Format code with ruff
-	uv run ruff format src tests
+fmt: ## Format code with black
+	uv run black src tests
 
-lint: ## Lint with ruff
+lint: ## Lint with ruff + black check
 	uv run ruff check src tests
-	uv run ruff format --check src tests
+	uv run black --check src tests
 
-test: ## Run all tests
-	uv run pytest -v
+typecheck: ## Static type check with mypy
+	uv run mypy src
+
+test: ## Run all tests with coverage
+	uv run pytest -v --cov=mimir --cov-report=term-missing
 
 test-fast: ## Run only tests that don't need heavy deps
 	uv run pytest -v -k "not integration"
+
+coverage: ## Run tests and write an HTML coverage report
+	uv run pytest --cov=mimir --cov-report=html --cov-report=term-missing
+	@echo "open htmlcov/index.html"
 
 precommit: ## Run pre-commit on all files
 	uv run pre-commit run --all-files

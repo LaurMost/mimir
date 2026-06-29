@@ -24,7 +24,7 @@ def embed_documents(texts: list[str]) -> list[list[float]]:
 def embed_query(text: str) -> list[float]:
     """Embed a single search query (BGE models use a different prefix internally)."""
     embedder = get_embedder()
-    return next(embedder.query_embed([text])).tolist()
+    return next(iter(embedder.query_embed([text]))).tolist()
 
 
 def embed_iter(texts: Iterable[str]):

@@ -52,14 +52,17 @@ def search(
         with_payload=True,
     )
 
-    return [
-        Hit(
-            score=p.score,
-            text=p.payload["text"],
-            path=p.payload["path"],
-            title=p.payload["title"],
-            folder=p.payload.get("folder", "."),
-            chunk_idx=p.payload.get("chunk_idx", 0),
+    hits: list[Hit] = []
+    for p in result.points:
+        payload = p.payload or {}
+        hits.append(
+            Hit(
+                score=p.score,
+                text=payload["text"],
+                path=payload["path"],
+                title=payload["title"],
+                folder=payload.get("folder", "."),
+                chunk_idx=payload.get("chunk_idx", 0),
+            )
         )
-        for p in result.points
-    ]
+    return hits
