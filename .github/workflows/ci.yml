@@ -64,7 +64,7 @@ jobs:
         run: uv sync --extra dev --python ${{ matrix.python-version }}
 
       - name: Run pytest
-        run: uv run pytest -v --tb=short --cov=mimir --cov-report=term-missing
+        run: uv run --python ${{ matrix.python-version }} --extra dev pytest -v --tb=short --cov=mimir --cov-report=term-missing
 
   integration:
     name: Integration (Qdrant)
