@@ -1,11 +1,36 @@
 [project]
 name = "mimir"
 version = "0.1.0"
-description = "Local second brain: Qdrant + fastembed + Ollama"
+description = "Local-first second brain — Qdrant + fastembed + Ollama on your Mac"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Laurence Mostert" }]
 license = { text = "MIT" }
+keywords = [
+    "vector-database",
+    "qdrant",
+    "rag",
+    "second-brain",
+    "embeddings",
+    "local-first",
+    "personal-knowledge-management",
+    "fastembed",
+    "ollama",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 dependencies = [
     "qdrant-client[fastembed]>=1.12.0",
@@ -21,10 +46,17 @@ dependencies = [
 [project.scripts]
 mimir = "mimir.cli:app"
 
+[project.urls]
+Homepage = "https://github.com/yourname/mimir"
+Repository = "https://github.com/yourname/mimir"
+Issues = "https://github.com/yourname/mimir/issues"
+Changelog = "https://github.com/yourname/mimir/blob/main/CHANGELOG.md"
+
 [project.optional-dependencies]
 dev = [
     "ruff>=0.6.0",
     "pytest>=8.0.0",
+    "pre-commit>=3.8.0",
 ]
 
 [build-system]
@@ -37,6 +69,34 @@ packages = ["src/mimir"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+extend-exclude = ["qdrant_storage", "notes"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "RUF"]
+select = ["E", "F", "I", "B", "UP", "RUF", "SIM", "PL"]
+ignore = [
+    "PLR0913",  # too many arguments — CLI commands legitimately take many
+    "PLR0912",  # too many branches — ingest pipeline is inherently branchy
+    "PLR2004",  # magic values in tests are fine
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Typer uses `typer.Argument(...)` / `typer.Option(...)` calls in defaults —
+# that's the canonical pattern, not a real bug. Lazy imports in cli.py are
+# intentional (e.g. shutil.which only used by `watch`).
+"src/mimir/cli.py" = ["B008", "PLC0415"]
+# pypdf is heavy and only needed when actually loading a PDF; the lazy import is deliberate.
+"src/mimir/loaders.py" = ["PLC0415"]
+# test_smoke.py is literally testing that every module imports.
+"tests/test_smoke.py" = ["PLC0415"]
+# Tests legitimately import pytest helpers inside test functions for clarity.
+"tests/*" = ["PLR2004", "S101", "PLC0415"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra --strict-markers --strict-config"
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning:fastembed.*",
+    "ignore::DeprecationWarning:qdrant_client.*",
+]
