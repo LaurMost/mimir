@@ -4,10 +4,20 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from functools import lru_cache
+from typing import Protocol, runtime_checkable
 
 from fastembed import TextEmbedding
 
 from mimir.config import settings
+
+
+@runtime_checkable
+class Embedder(Protocol):
+    """The seam every embedding adapter satisfies."""
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]: ...
+
+    def embed_query(self, text: str) -> list[float]: ...
 
 
 @lru_cache(maxsize=1)

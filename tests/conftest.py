@@ -25,3 +25,36 @@ def notes_dir(tmp_path) -> Path:
     d = tmp_path / "notes"
     d.mkdir(exist_ok=True)
     return d
+
+
+VECTOR_SIZE = 384
+
+
+class FakeEmbedder:
+    """Deterministic embedder satisfying the Embedder seam. No ONNX model load."""
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return [[0.0] * VECTOR_SIZE for _ in texts]
+
+    def embed_query(self, text: str) -> list[float]:
+        return [0.0] * VECTOR_SIZE
+
+
+@pytest.fixture
+def fake_embedder(monkeypatch) -> FakeEmbedder:
+    """Swap the embeddings seam for a fake so tests never load the ONNX model.
+
+    Patches the module-level seam functions (`embed_documents` / `embed_query`)
+    rather than `get_embedder`, since those are what callers cross. Also guards
+    `get_embedder` so an accidental real load fails loudly instead of silently
+    downloading the model.
+    """
+    fake = FakeEmbedder()
+    monkeypatch.setattr("mimir.embeddings.embed_documents", fake.embed_documents)
+    monkeypatch.setattr("mimir.embeddings.embed_query", fake.embed_query)
+
+    def _no_load():
+        raise AssertionError("get_embedder() called while fake_embedder is active")
+
+    monkeypatch.setattr("mimir.embeddings.get_embedder", _no_load)
+    return fake

@@ -2,21 +2,19 @@
 
 from __future__ import annotations
 
-from mimir.config import settings
+DEFAULT_CHUNK_SIZE = 1200
+DEFAULT_OVERLAP = 150
 
 
 def chunk_text(
     text: str,
-    max_chars: int | None = None,
-    overlap: int | None = None,
+    max_chars: int = DEFAULT_CHUNK_SIZE,
+    overlap: int = DEFAULT_OVERLAP,
 ) -> list[str]:
     """
     Sliding-window chunker that prefers to break on paragraph, then newline,
     then sentence boundaries. Works fine for prose and markdown.
     """
-    max_chars = max_chars or settings.chunk_size
-    overlap = overlap or settings.chunk_overlap
-
     text = text.strip()
     if not text:
         return []
